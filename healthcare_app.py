@@ -173,6 +173,7 @@ import sqlite3
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import pickle 
 
 # Connect to SQLite database
 conn = sqlite3.connect('healthcare.db')
@@ -222,14 +223,28 @@ recommendations = recommend_procedures('Kidney transplant')
 if recommendations is not None:
     print(recommendations[['ProcedureID', 'ProcedureName']])
 
+# Save the TF-IDF vectorizer and cosine similarity matrix to a pickle file
+with open('tfidf_cosine_sim.pkl', 'wb') as f:
+    pickle.dump((tfidf_vectorizer, cosine_sim), f)
+
+print("TF-IDF vectorizer and cosine similarity matrix saved to 'tfidf_cosine_sim.pkl'.")
+
 
 ##################################
 
+
+# You can now use tfidf_vectorizer and cosine_sim as needed
 import streamlit as st
 import sqlite3
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
+
+
+# Load the TF-IDF vectorizer and cosine similarity matrix from the pickle file
+with open('tfidf_cosine_sim.pkl', 'rb') as f:
+    tfidf_vectorizer, cosine_sim = pickle.load(f)
 
 # Function to connect to the SQLite database
 def get_connection(db_name='healthcare.db'):
